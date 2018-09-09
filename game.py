@@ -12,7 +12,7 @@ class Game():
     
     def random_fill(self):
         idx_fill = sample(self.idx_empty, 1)
-        self.grid[idx_fill[0]] = 2**np.random.randint(1,2,size=1)
+        self.grid[idx_fill[0]] = 2**np.random.randint(1, 3, size=1)
         self.reset_idx_empty()
         return None
     
