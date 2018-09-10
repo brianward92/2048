@@ -3,11 +3,14 @@ from copy import copy
 from random import sample
 
 class Game():
-    def __init__(self):
+    def __init__(self, verbose = False):
         self.grid = np.zeros((4,4),dtype='int')
         self.reset_idx_empty()
         self.random_fill()
         self.random_fill()
+        self.score = 0
+        self.infeasible_moves = []
+        self.verbose = verbose
         return None
     
     def random_fill(self):
@@ -21,10 +24,10 @@ class Game():
         self.idx_empty = set(zip(rows, cols))
         return None
     
-    def check_over(self):
-        pass
-    
+    check_over = lambda self: len(self.infeasible_moves) == 4
+        
     def make_move(self, action):
+        
         grid0 = copy(self.grid)
         
         def _proc_array(a):
@@ -34,7 +37,9 @@ class Game():
             
             while len(non_zero)>1:
                 if non_zero[-1] == non_zero[-2]:
-                    completed.append(2*non_zero[-1])
+                    new_val = 2*non_zero[-1]
+                    self.score += new_val
+                    completed.append(new_val)
                     non_zero = non_zero[:-2]
                 else:
                     completed.append(non_zero[-1])
@@ -60,14 +65,18 @@ class Game():
             for i in range(4):
                 self.grid[:,i] = _proc_inverted(self.grid[:,i])
         else:
-            print('That is not a valid action.')
+            if self.verbose:
+                print('That is not a valid action.')
             return None
         
         if np.prod(grid0 == self.grid):
-            print('The action ' + action + ' does not affect the current grid.')
+            if self.verbose:
+                print('The action \'' + action + '\' does not affect the current grid.')
+            self.infeasible_moves += [action]
             return None
-            
-        self.random_fill()
+        
+        self.infeasible_moves = []    
         self.reset_idx_empty()
+        self.random_fill()
         
         return None
