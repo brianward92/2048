@@ -80,3 +80,19 @@ class Game():
         self.random_fill()
         
         return None
+    
+    def play_game(self):
+        from IPython.display import clear_output
+        print(self.grid)
+        cmd = input()
+        cmd_dict = {'w':'up','d':'right','s':'down','a':'left'}
+        while cmd!='exit':
+            clear_output()
+            if cmd in cmd_dict.keys():
+                self.make_move(cmd_dict[cmd])
+            else:
+                self.make_move(cmd)
+            print(self.grid)
+            cmd = input()
+            
+        return None
