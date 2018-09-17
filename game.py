@@ -9,7 +9,7 @@ class Game():
         self.random_fill()
         self.random_fill()
         self.score = 0
-        self.infeasible_moves = []
+        self.infeasible_moves = set()
         self.verbose = verbose
         return None
     
@@ -72,12 +72,11 @@ class Game():
         if np.prod(grid0 == self.grid):
             if self.verbose:
                 print('The action \'' + action + '\' does not affect the current grid.')
-            self.infeasible_moves += [action]
-            return None
-        
-        self.infeasible_moves = []    
-        self.reset_idx_empty()
-        self.random_fill()
+            self.infeasible_moves = self.infeasible_moves.union(set([action]))
+        else:
+            self.infeasible_moves = set()
+            self.reset_idx_empty()
+            self.random_fill()
         
         return None
     
